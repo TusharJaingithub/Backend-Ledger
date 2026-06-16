@@ -79,6 +79,19 @@ async function createTransaction(req, res) {
             }
 
             /**
+             * Optimistic lock: bump the sender account version inside the
+             * transaction so concurrent transfers from the same account
+             * conflict on this document. MongoDB aborts one of them with a
+             * write conflict, withTransaction retries it, and the retry sees
+             * the committed debit — preventing a double-spend race.
+             */
+            await accountModel.updateOne(
+                { _id: fromAccount },
+                { $inc: { version: 1 } },
+                { session }
+            )
+
+            /**
              * 4. Derive sender balance from ledger (inside the transaction)
              */
             const balance = await fromUserAccount.getBalance({ session })
