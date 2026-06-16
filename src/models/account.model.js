@@ -31,9 +31,9 @@ const accountSchema = new mongoose.Schema(
 // compound index
 accountSchema.index({ user: 1, status: 1 });
 
-accountSchema.methods.getBalance = async function () {
+accountSchema.methods.getBalance = async function ({ session } = {}) {
 
-    const balanceData = await ledgerModel.aggregate([
+    const aggregation = ledgerModel.aggregate([
         { $match: { account: this._id } },
         {
             $group: {
@@ -65,6 +65,12 @@ accountSchema.methods.getBalance = async function () {
             }
         }
     ])
+
+    if (session) {
+        aggregation.session(session)
+    }
+
+    const balanceData = await aggregation
 
     if (balanceData.length === 0) {
         return 0
