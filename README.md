@@ -47,15 +47,21 @@ A secure banking ledger backend built with Node.js, Express, MongoDB, and Mongoo
 
 ```bash
 Backend-Ledger/
-│── controllers/
-│── models/
-│── routes/
-│── services/
-│── middlewares/
-│── config/
-│── utils/
+│── src/
+│   │── controllers/
+│   │── models/
+│   │── routes/
+│   │── services/
+│   │── middlewares/
+│   │── config/
+│
+│── .env
+│── .gitignore
+│── package.json
+│── package-lock.json
 │── app.js
 │── server.js
+│── README.md
 ```
 
 ---
